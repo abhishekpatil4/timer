@@ -19,6 +19,16 @@ function displayTime(time){
 
 //funtion thats called when timer starts
 function startTimer(mint, sec, thisButton, buttonType) {
+    if(sec < 0 || mint < 0 || isNaN(mint) || isNaN(sec)) 
+    {
+        alert("Invalid input!");
+        clearInterval(refreshId);
+        return 0;
+    }
+
+    var startSound = new Audio('sounds/nothingStart.mp3'); //play audio when start
+    startSound.play();
+    
     if(buttonType==0)
     {
         thisButton.disabled = true; //Checking if its START buttoon & disabling once function starts
@@ -27,10 +37,11 @@ function startTimer(mint, sec, thisButton, buttonType) {
     if (mint == 0 && sec == 0) { //default time
         sec = 30;
     }
+    
     var time = Number(mint*60) + Number(sec);
     
     displayTime(time);
-
+    var flag_sound = 0;
     var refreshId = setInterval(updateCountdown, 1000);
     //setInterval() calls the function every 1 second
     // setInterval() returns an interval ID, which you can pass to clearInterval()
@@ -49,10 +60,18 @@ function startTimer(mint, sec, thisButton, buttonType) {
             clearInterval(refreshId);
             return 0;
         }
+        
+        if(time <= 3 && flag_sound == 0)
+        {
+            flag_sound = 1;
+            var endingSound = new Audio('sounds/timerEnding.mp3'); //play audio when start
+            endingSound.play();
+        }
 
         //calling display function
         displayTime(time);
         time--;
+        console.log("Time: " + time);
     }
 
 }
@@ -62,14 +81,17 @@ function startTimer(mint, sec, thisButton, buttonType) {
 function restartTimer(mint, sec, thisButton, buttonType) {
     flag = 1; //setting flag to 1 to stop previous timer
 
+    var restartSound = new Audio('sounds/nothing.mp3'); //play audio when restart
+    restartSound.play();
+
     //Restart blink and calls the startTimer
-    countDownEl.innerHTML = `RESTART!`;
+    countDownEl.innerHTML = `RELOAD`;
     setTimeout(function() {
         countDownEl.innerHTML = `‎`; 
-    }, 333);
+    }, 200);
     setTimeout(function() {
-        countDownEl.innerHTML = `RESTART!`; 
-    }, 666);
+        countDownEl.innerHTML = `RELOAD`; 
+    }, 500);
     setTimeout(function() {
         countDownEl.innerHTML = `‎`; 
         flag = 0;
